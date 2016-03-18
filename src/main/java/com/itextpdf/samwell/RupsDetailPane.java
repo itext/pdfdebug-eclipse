@@ -51,15 +51,11 @@ import com.itextpdf.kernel.pdf.*;
 
 public class RupsDetailPane implements IDetailPane {
 	
-	private final Structure helper = new Structure();
 	private Composite comp;
 	private JLabel label;
+	private Rups rups;
+	private JPanel panel;
 	private java.awt.Frame frame;
-	
-	private class Structure {
-		JPanel panel;
-		RupsController controller;
-	}
 	
 	public static final String ID = "SamwellDetailPane";
 	public static final String NAME = "PdfDocument Detail Pane";
@@ -71,58 +67,40 @@ public class RupsDetailPane implements IDetailPane {
 	@Override
 	public Control createControl(Composite parent) {
 		// TODO Auto-generated method stub
-		helper.panel = new JPanel(new BorderLayout());
+		panel = new JPanel(new BorderLayout());
 		comp = new Composite(parent, SWT.EMBEDDED | SWT.NO_BACKGROUND);
 		frame = SWT_AWT.new_Frame(comp);
-		frame.add(helper.panel, BorderLayout.CENTER);
+		frame.add(panel, BorderLayout.CENTER);
 		label = new JLabel("plugin is in other window");
-		//helper.panel.add(label);
+		//panel.add(label);
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		comp.setLayoutData(gd);
-		frame.setSize(parent.getSize().x, parent.getSize().y);
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				Dimension test = helper.panel.getSize();
-				helper.controller = new RupsController(test);
-				helper.panel.add(helper.controller.getMasterComponent(), BorderLayout.CENTER);
-				helper.controller.loadFile(null);
-			}
-		});
+		Dimension dim = new Dimension(parent.getSize().x, parent.getSize().y);
+		frame.setSize(dim);
+		rups = Rups.startNewPlugin(panel, dim);
 		return comp;
 	}
 
-	
-	
 	@Override
 	public void dispose() {
+		rups.closeDocument();
+		comp.dispose();
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void display(IStructuredSelection selection) {
 		ByteArrayOutputStream baos = null;
-		final ByteArrayInputStream bais;
+		ByteArrayInputStream bais = null;
 		try {
-			if (selection != null && selection.size() != 0 && selection.getFirstElement() instanceof IJavaVariable) {
+			if (isPdfDocument(selection)) {
 				PdfDocument doc = getPdfDocument(selection);
 				baos = doc.getWriter().getByteArrayOutputStream();
 				doc.getWriter().setCloseStream(true);
 				doc.setCloseWriter(true);
 				doc.close();
 		    	bais = new ByteArrayInputStream(baos.toByteArray());
-		    	SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						helper.controller.loadFileFromStream(bais, "test");
-						try {
-							bais.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				});
+		    	rups.loadDocumentFromStream(bais, "test", null);
 			} else {
 				bais = null;
 			}
@@ -136,6 +114,13 @@ public class RupsDetailPane implements IDetailPane {
 			try {
 				if (baos != null) {
 					baos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				if (bais != null) {
+					bais.close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -175,7 +160,7 @@ public class RupsDetailPane implements IDetailPane {
 	
 	public static boolean isPdfDocument(IStructuredSelection selection) {
 		try {
-			IJavaObject obj = castToIJavaObject(selection);
+			IJavaObject obj = getIJavaObject(selection);
 			if (obj != null && obj.getJavaType().getName().equals(CLASS_TYPE)) {
 				return true;
 			}
@@ -189,7 +174,7 @@ public class RupsDetailPane implements IDetailPane {
 			throws DebugException, ClassNotFoundException, IOException{
 		byte[] bytes = null;
 		IJavaValue byteArr = null;
-		IJavaObject obj = castToIJavaObject(selection);
+		IJavaObject obj = getIJavaObject(selection);
 		if (obj != null && obj.getJavaType().getName().equals(CLASS_TYPE)) {
 			IJavaVariable var = (IJavaVariable)selection.getFirstElement();
 			
@@ -238,7 +223,7 @@ public class RupsDetailPane implements IDetailPane {
 		return doc;
 	}
 	
-	private static IJavaObject castToIJavaObject(IStructuredSelection selection) throws DebugException{
+	private static IJavaObject getIJavaObject(IStructuredSelection selection) throws DebugException{
 		IJavaObject res = null;
 		if (selection != null && selection.size() != 0 && selection.getFirstElement() instanceof IJavaVariable) {
 			IJavaVariable var = (IJavaVariable)selection.getFirstElement();
