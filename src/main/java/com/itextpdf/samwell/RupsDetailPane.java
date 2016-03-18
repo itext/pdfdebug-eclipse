@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPartSite;
 import com.itextpdf.rups.Rups;
 import com.itextpdf.rups.controller.RupsController;
+import com.itextpdf.kernel.PdfException;
 import com.itextpdf.kernel.pdf.*;
 
 
@@ -100,7 +101,7 @@ public class RupsDetailPane implements IDetailPane {
 				doc.setCloseWriter(true);
 				doc.close();
 		    	bais = new ByteArrayInputStream(baos.toByteArray());
-		    	rups.loadDocumentFromStream(bais, "test", null);
+		    	rups.loadDocumentFromStream(bais, getVariableName(selection), null, true);
 			} else {
 				bais = null;
 			}
@@ -109,6 +110,9 @@ public class RupsDetailPane implements IDetailPane {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (PdfException | com.itextpdf.io.IOException e) {
+			rups.closeDocument();
 			e.printStackTrace();
 		} finally {
 			try {
@@ -235,4 +239,13 @@ public class RupsDetailPane implements IDetailPane {
 		}				
 		return res;
 	}
+	
+	private static String getVariableName(IStructuredSelection selection) throws DebugException{
+		String res = null;
+		if (selection != null && selection.size() != 0 && selection.getFirstElement() instanceof IJavaVariable) {
+			IJavaVariable var = (IJavaVariable)selection.getFirstElement();
+			res = var.getName();
+		}				
+		return res;
+	} 
 }
