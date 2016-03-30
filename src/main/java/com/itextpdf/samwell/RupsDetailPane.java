@@ -113,10 +113,6 @@ public class RupsDetailPane implements IDetailPane {
             e.printStackTrace();
         } finally {
             try {
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
                 if (bais != null) {
                     bais.close();
                 }
