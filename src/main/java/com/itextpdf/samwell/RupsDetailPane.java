@@ -7,6 +7,8 @@ import java.io.ByteArrayOutputStream;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.swing.JPanel;
 
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPartSite;
 
+import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.rups.Rups;
 import com.itextpdf.kernel.PdfException;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -45,6 +48,17 @@ public class RupsDetailPane implements IDetailPane {
     public static final String CLASS_TYPE = "com.itextpdf.kernel.pdf.PdfDocument";
     public static final String METHOD_SIGNATURE = "()[B";
     public static final String METHOD_NAME = "getSerializedBytes";
+
+    private static final String DEBUG_BYTES_METHOD_NAME = "getDebugBytes";
+    private static Method getDebugBytesMethod;
+
+    static {
+        try {
+            getDebugBytesMethod = PdfWriter.class.getMethod(DEBUG_BYTES_METHOD_NAME);
+            getDebugBytesMethod.setAccessible(true);
+        } catch (NoSuchMethodException ignored) {
+        }
+    }
 
     @Override
     public Control createControl(Composite parent) {
@@ -68,16 +82,22 @@ public class RupsDetailPane implements IDetailPane {
 
     @Override
     public void display(IStructuredSelection selection) {
-        ByteArrayOutputStream baos = null;
         ByteArrayInputStream bais = null;
         try {
             if (isPdfDocument(selection)) {
                 PdfDocument doc = getPdfDocument(selection);
-                baos = doc.getWriter().getByteArrayOutputStream();
+                byte[] documentCopyBytes = null;
+                try {
+                    documentCopyBytes = (byte[]) getDebugBytesMethod.invoke(doc.getWriter());
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
                 doc.getWriter().setCloseStream(true);
                 doc.setCloseWriter(true);
                 doc.close();
-                bais = new ByteArrayInputStream(baos.toByteArray());
+                bais = new ByteArrayInputStream(documentCopyBytes);
                 rups.loadDocumentFromStream(bais, getVariableName(selection), null, true);
             } else {
                 bais = null;
@@ -93,9 +113,6 @@ public class RupsDetailPane implements IDetailPane {
             e.printStackTrace();
         } finally {
             try {
-                if (baos != null) {
-                    baos.close();
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
