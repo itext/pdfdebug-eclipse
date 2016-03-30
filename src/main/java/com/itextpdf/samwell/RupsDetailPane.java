@@ -86,6 +86,9 @@ public class RupsDetailPane implements IDetailPane {
         try {
             if (isPdfDocument(selection)) {
                 PdfDocument doc = getPdfDocument(selection);
+                doc.getWriter().setCloseStream(true);
+                doc.setCloseWriter(true);
+                doc.close();
                 byte[] documentCopyBytes = null;
                 try {
                     documentCopyBytes = (byte[]) getDebugBytesMethod.invoke(doc.getWriter());
@@ -94,9 +97,6 @@ public class RupsDetailPane implements IDetailPane {
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
-                doc.getWriter().setCloseStream(true);
-                doc.setCloseWriter(true);
-                doc.close();
                 bais = new ByteArrayInputStream(documentCopyBytes);
                 rups.loadDocumentFromStream(bais, getVariableName(selection), null, true);
             } else {
