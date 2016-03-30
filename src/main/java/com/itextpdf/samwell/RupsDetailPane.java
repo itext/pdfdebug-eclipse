@@ -54,7 +54,7 @@ public class RupsDetailPane implements IDetailPane {
 
     static {
         try {
-            getDebugBytesMethod = PdfWriter.class.getMethod(DEBUG_BYTES_METHOD_NAME);
+            getDebugBytesMethod = PdfWriter.class.getDeclaredMethod(DEBUG_BYTES_METHOD_NAME);
             getDebugBytesMethod.setAccessible(true);
         } catch (NoSuchMethodException ignored) {
         }
