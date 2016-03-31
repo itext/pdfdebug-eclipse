@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IThread;
@@ -86,17 +87,19 @@ public class RupsDetailPane implements IDetailPane {
         try {
             if (isPdfDocument(selection)) {
                 PdfDocument doc = getPdfDocument(selection);
-                doc.getWriter().setCloseStream(true);
-                doc.setCloseWriter(true);
+                PdfWriter writer = doc.getWriter();
+                writer.setCloseStream(true);
+                doc.setCloseWriter(false);
                 doc.close();
                 byte[] documentCopyBytes = null;
                 try {
-                    documentCopyBytes = (byte[]) getDebugBytesMethod.invoke(doc.getWriter());
+                    documentCopyBytes = (byte[]) getDebugBytesMethod.invoke(writer);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
+                writer.close();
                 bais = new ByteArrayInputStream(documentCopyBytes);
                 rups.loadDocumentFromStream(bais, getVariableName(selection), null, true);
             } else {
@@ -109,8 +112,8 @@ public class RupsDetailPane implements IDetailPane {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (PdfException | com.itextpdf.io.IOException e) {
-            rups.closeDocument();
-            e.printStackTrace();
+        	rups.closeDocument();
+        	e.printStackTrace();
         } finally {
             try {
                 if (bais != null) {
