@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.debug.ui.detailPaneFactories">
       <detailFactories
-            class="com.itextpdf.samwell.PdfDocumentDetailPaneFactory"
+            class="com.itextpdf.samwell.plugin.PdfDocumentDetailPaneFactory"
             id="com.itextpdf.samwell.detailFactories">
       </detailFactories>
    </extension>

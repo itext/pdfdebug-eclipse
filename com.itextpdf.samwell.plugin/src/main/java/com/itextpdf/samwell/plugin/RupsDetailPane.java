@@ -1,9 +1,8 @@
-package com.itextpdf.samwell;
+package com.itextpdf.samwell.plugin;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -113,7 +112,13 @@ public class RupsDetailPane implements IDetailPane {
             e.printStackTrace();
         } catch (PdfException | com.itextpdf.io.IOException e) {
         	rups.closeDocument();
-        	e.printStackTrace();
+        	SwingUtilities.invokeLater(new Runnable() {
+        		
+        		@Override
+        		public void run() {
+        			e.printStackTrace();
+        		}
+        	});
         } finally {
             try {
                 if (bais != null) {

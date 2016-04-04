@@ -1,4 +1,4 @@
-package com.itextpdf.samwell;
+package com.itextpdf.samwell.plugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,10 +9,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 
 public class PdfDocumentDetailPaneFactory implements IDetailPaneFactory {
 
-    private HashSet<String> ids = new HashSet<String>();
-    private HashSet<String> empty = new HashSet<String>();
+    protected static final HashSet<String> ids = new HashSet<String>();
+    protected static final HashSet<String> empty = new HashSet<String>();
 
-    public PdfDocumentDetailPaneFactory() {
+    static {
         ids.add(RupsDetailPane.ID);
     }
 
