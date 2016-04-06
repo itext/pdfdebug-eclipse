@@ -27,6 +27,7 @@
                         </goals>
                         <configuration>
                             <includeGroupIds>com.itextpdf</includeGroupIds>
+			                <excludeArtifactIds>com.itextpdf.samwell.thirdparty.dependencies, com.itextpdf.samwell.itext.dependencies</excludeArtifactIds>
                             <outputDirectory>${basedir}/lib</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>

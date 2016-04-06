@@ -16,7 +16,7 @@
 	</properties>
 
 	<modules>
-		<module>com.itextpdf.samwell.tirdparty.dependencies</module>
+		<module>com.itextpdf.samwell.thirdparty.dependencies</module>
 		<module>com.itextpdf.samwell.itext.dependencies</module>
     		<module>com.itextpdf.samwell.plugin</module>
     		<module>com.itextpdf.samwell.feature</module>
