@@ -51,9 +51,6 @@
                             <filesets>
                                 <fileset>
                                     <directory>${basedir}/lib</directory>
-                                    <includes>
-                                        <include>*.jar</include>
-                                    </includes>
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
                             </filesets>
