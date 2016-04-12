@@ -34,6 +34,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.rups.Rups;
 import com.itextpdf.kernel.PdfException;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
 
 public class RupsDetailPane implements IDetailPane {
 
@@ -51,6 +52,8 @@ public class RupsDetailPane implements IDetailPane {
 
     private static final String DEBUG_BYTES_METHOD_NAME = "getDebugBytes";
     private static Method getDebugBytesMethod;
+    
+    private PdfDocument prevDoc;
 
     static {
         try {
@@ -82,7 +85,7 @@ public class RupsDetailPane implements IDetailPane {
 
     @Override
     public void display(IStructuredSelection selection) {
-        ByteArrayInputStream bais = null;
+    	ByteArrayInputStream bais = null;
         try {
             if (isPdfDocument(selection)) {
                 PdfDocument doc = getPdfDocument(selection);
@@ -100,7 +103,14 @@ public class RupsDetailPane implements IDetailPane {
                 }
                 writer.close();
                 bais = new ByteArrayInputStream(documentCopyBytes);
-                rups.loadDocumentFromStream(bais, getVariableName(selection), null, true);
+                PdfReader reader = new PdfReader(bais);
+                reader.setCloseStream(false);
+                PdfDocument tempDoc = new PdfDocument(reader);
+                rups.loadDocumentFromRawContent(documentCopyBytes, getVariableName(selection), null, true);
+                if (prevDoc != null) {
+                	rups.compareWith(prevDoc);
+                }
+                prevDoc = tempDoc;
             } else {
                 bais = null;
             }
