@@ -52,7 +52,8 @@ public class RupsDetailPane implements IDetailPane {
     public static final String METHOD_SIGNATURE = "()[B";
     public static final String METHOD_NAME = "getSerializedBytes";
     
-    private static final String ERROR_MESSAGE = "Cannot get PdfDocument. Make shure you use setDebugMode on PdfWriter."; 
+    private static final String ERROR_MESSAGE = "Cannot get PdfDocument. "
+    		+ "\nMake sure you create reader from stream and writer is set to DebugMode."; 
 
     private static final String DEBUG_BYTES_METHOD_NAME = "getDebugBytes";
     private static Method getDebugBytesMethod;
@@ -87,7 +88,7 @@ public class RupsDetailPane implements IDetailPane {
 
     @Override
     public void dispose() {
-    	rups.closeDocument();
+    	closeRoutine();
     	SwingHelper.invokeSync(new Runnable() {
 			public void run() {
 				frame.dispose();
@@ -126,7 +127,6 @@ public class RupsDetailPane implements IDetailPane {
                 writer.close();
                 bais = new ByteArrayInputStream(documentCopyBytes);
                 PdfReader reader = new PdfReader(bais);
-                reader.setCloseStream(false);
                 PdfDocument tempDoc = new PdfDocument(reader);
                 rups.loadDocumentFromRawContent(documentCopyBytes, getVariableName(selection), null, true);
                 if (prevDoc != null) {
@@ -134,7 +134,7 @@ public class RupsDetailPane implements IDetailPane {
                 }
                 prevDoc = tempDoc;
             } else {
-                rups.closeDocument();
+            	closeRoutine();
                 comp.setVisible(false);    
             }
         } catch (DebugException e) {
@@ -202,6 +202,18 @@ public class RupsDetailPane implements IDetailPane {
             //e.printStackTrace();
         }
         return false;
+    }
+    
+    private void closeRoutine() {
+    	try {
+    		rups.closeDocument();
+        	if (prevDoc != null) {
+        		prevDoc.close();
+        		prevDoc = null;
+        	}
+    	} catch (Exception any) {
+    		any.printStackTrace();
+    	}
     }
 
     private PdfDocument getPdfDocument(IStructuredSelection selection)
