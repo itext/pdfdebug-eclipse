@@ -2,6 +2,7 @@ package com.itextpdf.samwell.plugin;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.io.ByteArrayInputStream;
 
 import java.io.IOException;
@@ -32,16 +33,17 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.rups.Rups;
+import com.itextpdf.rups.model.SwingHelper;
 import com.itextpdf.kernel.PdfException;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 
 public class RupsDetailPane implements IDetailPane {
 
-    private Composite comp;
+    private volatile Composite comp;
     private Rups rups;
-    private JPanel panel;
-    private java.awt.Frame frame;
+    private volatile JPanel panel;
+    private volatile Frame frame;
 
     public static final String ID = "SamwellDetailPane";
     public static final String NAME = "PdfDocument Detail Pane";
@@ -49,11 +51,13 @@ public class RupsDetailPane implements IDetailPane {
     public static final String CLASS_TYPE = "com.itextpdf.kernel.pdf.PdfDocument";
     public static final String METHOD_SIGNATURE = "()[B";
     public static final String METHOD_NAME = "getSerializedBytes";
+    
+    private static final String ERROR_MESSAGE = "Cannot get PdfDocument. Make shure you use setDebugMode on PdfWriter."; 
 
     private static final String DEBUG_BYTES_METHOD_NAME = "getDebugBytes";
     private static Method getDebugBytesMethod;
     
-    private PdfDocument prevDoc;
+    private volatile PdfDocument prevDoc;
 
     static {
         try {
@@ -65,22 +69,31 @@ public class RupsDetailPane implements IDetailPane {
 
     @Override
     public Control createControl(Composite parent) {
-        panel = new JPanel(new BorderLayout());
-        comp = new Composite(parent, SWT.EMBEDDED | SWT.NO_BACKGROUND);
-        frame = SWT_AWT.new_Frame(comp);
-        frame.add(panel, BorderLayout.CENTER);
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+    	comp = new Composite(parent, SWT.EMBEDDED | SWT.NO_BACKGROUND);
+    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         comp.setLayoutData(gd);
+        frame = SWT_AWT.new_Frame(comp);
+        frame = SWT_AWT.getFrame(comp);
+        SwingHelper.invokeSync(new Runnable() {
+			public void run() {
+				panel = new JPanel(new BorderLayout());
+		        frame.add(panel, BorderLayout.CENTER);			        
+			}
+		});
         Dimension dim = new Dimension(parent.getSize().x, parent.getSize().y);
-        frame.setSize(dim);
-        rups = Rups.startNewPlugin(panel, dim);
+        rups = Rups.startNewPlugin(panel, dim, SWT_AWT.getFrame(comp));
         return comp;
     }
 
     @Override
     public void dispose() {
-        rups.closeDocument();
-        comp.dispose();
+    	rups.closeDocument();
+    	SwingHelper.invokeSync(new Runnable() {
+			public void run() {
+				frame.dispose();
+			}
+		});
+    	comp.dispose();
     }
 
     @Override
@@ -88,7 +101,16 @@ public class RupsDetailPane implements IDetailPane {
     	ByteArrayInputStream bais = null;
         try {
             if (isPdfDocument(selection)) {
+            	comp.setVisible(true);
                 PdfDocument doc = getPdfDocument(selection);
+                if (doc == null) {
+                	SwingUtilities.invokeLater(new Runnable() {
+                		public void run() {
+                			System.err.println(ERROR_MESSAGE);
+                		}
+                	});
+                	return;
+                }
                 PdfWriter writer = doc.getWriter();
                 writer.setCloseStream(true);
                 doc.setCloseWriter(false);
@@ -112,7 +134,8 @@ public class RupsDetailPane implements IDetailPane {
                 }
                 prevDoc = tempDoc;
             } else {
-                bais = null;
+                rups.closeDocument();
+                comp.setVisible(false);    
             }
         } catch (DebugException e) {
             e.printStackTrace();
@@ -120,11 +143,14 @@ public class RupsDetailPane implements IDetailPane {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (PdfException | com.itextpdf.io.IOException e) {
-        	rups.closeDocument();
+        } catch (final PdfException | com.itextpdf.io.IOException e) {
         	SwingUtilities.invokeLater(new Runnable() {
-        		
-        		@Override
+        		public void run() {
+        			e.printStackTrace();
+        		}
+        	});
+        } catch (final Exception e) {
+        	SwingUtilities.invokeLater(new Runnable() {
         		public void run() {
         			e.printStackTrace();
         		}
@@ -191,10 +217,12 @@ public class RupsDetailPane implements IDetailPane {
                 byteArr = obj.sendMessage(METHOD_NAME, METHOD_SIGNATURE, null, (IJavaThread) owningThread, false);
             } else {
                 for (IThread th : obj.getDebugTarget().getThreads()) {
-                    IJavaVariable newVar = ((IJavaThread) th).findVariable(var.getName());
-                    if (var.equals(newVar)) {
-                        byteArr = obj.sendMessage(METHOD_NAME, METHOD_SIGNATURE, null, (IJavaThread) th, false);
-                    }
+                	if (th.isSuspended()) {
+                		IJavaVariable newVar = ((IJavaThread) th).findVariable(var.getName());
+                        if (var.equals(newVar)) {
+                            byteArr = obj.sendMessage(METHOD_NAME, METHOD_SIGNATURE, null, (IJavaThread) th, false);
+                        }
+                	}
                 }
             }
         }
@@ -217,6 +245,9 @@ public class RupsDetailPane implements IDetailPane {
     }
 
     private PdfDocument createDocumentFromBytes(byte[] bytes) throws ClassNotFoundException, IOException {
+    	if (bytes == null) {
+    		return null;
+    	}
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         PdfDocument doc = null;
         try {
