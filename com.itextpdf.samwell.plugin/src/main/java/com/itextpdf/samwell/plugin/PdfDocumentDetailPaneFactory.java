@@ -9,6 +9,9 @@ import org.eclipse.debug.ui.IDetailPane;
 import org.eclipse.debug.ui.IDetailPaneFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
+import com.itextpdf.samwell.plugin.utilities.DebugUtilities;
+import com.itextpdf.samwell.plugin.utilities.PdfDoсumentUtilities;
+
 public class PdfDocumentDetailPaneFactory implements IDetailPaneFactory {
 
     protected static final HashSet<String> ids = new HashSet<>();
@@ -48,7 +51,7 @@ public class PdfDocumentDetailPaneFactory implements IDetailPaneFactory {
 
     @Override
     public Set<String> getDetailPaneTypes(IStructuredSelection selection) {
-        if (RupsDetailPane.isPdfDocument(selection)) {
+        if (PdfDoсumentUtilities.isPdfDocument(DebugUtilities.getIJavaVariable(selection))) {
             return ids;
         }
         return Collections.emptySet();
@@ -56,7 +59,7 @@ public class PdfDocumentDetailPaneFactory implements IDetailPaneFactory {
 
     @Override
     public String getDefaultDetailPane(IStructuredSelection selection) {
-        if (RupsDetailPane.isPdfDocument(selection)) {
+        if (PdfDoсumentUtilities.isPdfDocument(DebugUtilities.getIJavaVariable(selection))) {
         	return RupsDetailPane.ID;
         }
         return null;

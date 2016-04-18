@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.itextpdf.samwell.itext.dependencies;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: lib/io-7.0.0-SNAPSHOT.jar,
  lib/itext-rups-7.0.0-SNAPSHOT.jar,
- lib/kernel-7.0.0-SNAPSHOT.jar
+ lib/kernel-7.0.0-SNAPSHOT.jar,
+ lib/licensekey-2.0.0-SNAPSHOT.jar
 Export-Package: com.itextpdf.io,
  com.itextpdf.io.codec,
  com.itextpdf.io.color,
@@ -55,6 +56,7 @@ Export-Package: com.itextpdf.io,
  com.itextpdf.kernel.xmp.impl.xpath,
  com.itextpdf.kernel.xmp.options,
  com.itextpdf.kernel.xmp.properties,
+ com.itextpdf.licensekey,
  com.itextpdf.rups,
  com.itextpdf.rups.controller,
  com.itextpdf.rups.io,
