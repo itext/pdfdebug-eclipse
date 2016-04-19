@@ -3,19 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Samwell-3rdparty-dependencies
 Bundle-SymbolicName: com.itextpdf.samwell.thirdparty.dependencies;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-ClassPath: lib/bcpkix-jdk15on-1.49.jar,
- lib/bcprov-jdk15on-1.49.jar,
- lib/dom4j-1.6.1.jar,
- lib/slf4j-api-1.7.13.jar,
+Bundle-ClassPath: lib/slf4j-api-1.7.13.jar,
  lib/slf4j-simple-1.7.13.jar,
- lib/xml-apis-1.0.b2.jar
-Export-Package: javax.xml.parsers,
- javax.xml.transform,
- javax.xml.transform.dom,
- javax.xml.transform.sax,
- javax.xml.transform.stream,
- org.apache.xmlcommons,
- org.bouncycastle,
+ lib/bcpkix-jdk15on-1.49.jar,
+ lib/bcprov-jdk15on-1.49.jar,
+ lib/xml-apis-1.0.b2.jar,
+ lib/dom4j-1.6.1.jar
+Export-Package: org.bouncycastle,
  org.bouncycastle.asn1,
  org.bouncycastle.asn1.bc,
  org.bouncycastle.asn1.cmp,
@@ -182,16 +176,5 @@ Export-Package: javax.xml.parsers,
  org.slf4j,
  org.slf4j.helpers,
  org.slf4j.impl,
- org.slf4j.spi,
- org.w3c.dom,
- org.w3c.dom.css,
- org.w3c.dom.events,
- org.w3c.dom.html,
- org.w3c.dom.ranges,
- org.w3c.dom.stylesheets,
- org.w3c.dom.traversal,
- org.w3c.dom.views,
- org.xml.sax,
- org.xml.sax.ext,
- org.xml.sax.helpers
+ org.slf4j.spi
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
