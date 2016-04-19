@@ -23,7 +23,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.itextpdf.rups.Rups;
 import com.itextpdf.rups.model.SwingHelper;
 import com.itextpdf.samwell.plugin.utilities.DebugUtilities;
-import com.itextpdf.samwell.plugin.utilities.PdfDoсumentUtilities;
+import com.itextpdf.samwell.plugin.utilities.PdfDocumentUtilities;
 import com.itextpdf.kernel.PdfException;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
@@ -76,9 +76,9 @@ public class RupsDetailPane implements IDetailPane {
     	ByteArrayInputStream bais = null;
     	IJavaVariable var = DebugUtilities.getIJavaVariable(selection);
         try {
-        	if (PdfDoсumentUtilities.isPdfDocument(var)) {
+        	if (PdfDocumentUtilities.isPdfDocument(var)) {
             	comp.setVisible(true);
-                byte[] documentRawBytes = PdfDoсumentUtilities.getDocumentDebugBytes(var);
+                byte[] documentRawBytes = PdfDocumentUtilities.getDocumentDebugBytes(var);
                 bais = new ByteArrayInputStream(documentRawBytes);
                 PdfReader reader = new PdfReader(bais);
                 PdfDocument tempDoc = new PdfDocument(reader);

@@ -20,7 +20,7 @@ import org.eclipse.jdt.debug.core.IJavaVariable;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 
-public class PdfDoсumentUtilities {
+public class PdfDocumentUtilities {
 	
 	public static final String CLASS_TYPE = "com.itextpdf.kernel.pdf.PdfDocument";
 	public static final String METHOD_SIGNATURE = "()[B";
