@@ -79,14 +79,16 @@ public class RupsDetailPane implements IDetailPane {
         	if (PdfDocumentUtilities.isPdfDocument(var)) {
             	comp.setVisible(true);
                 byte[] documentRawBytes = PdfDocumentUtilities.getDocumentDebugBytes(var);
-                bais = new ByteArrayInputStream(documentRawBytes);
-                PdfReader reader = new PdfReader(bais);
-                PdfDocument tempDoc = new PdfDocument(reader);
-                rups.loadDocumentFromRawContent(documentRawBytes, DebugUtilities.getVariableName(selection), null, true);
-                if (prevDoc != null) {
-                	rups.compareWithDocument(prevDoc);
+                if (documentRawBytes != null) {
+                	bais = new ByteArrayInputStream(documentRawBytes);
+                    PdfReader reader = new PdfReader(bais);
+                    PdfDocument tempDoc = new PdfDocument(reader);
+                    rups.loadDocumentFromRawContent(documentRawBytes, DebugUtilities.getVariableName(selection), null, true);
+                    if (prevDoc != null) {
+                    	rups.compareWithDocument(prevDoc);
+                    }
+                    prevDoc = tempDoc;
                 }
-                prevDoc = tempDoc;
             } else {
             	closeRoutine();
                 comp.setVisible(false);    
