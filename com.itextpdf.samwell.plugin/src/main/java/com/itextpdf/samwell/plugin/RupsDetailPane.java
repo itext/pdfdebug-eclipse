@@ -83,9 +83,10 @@ public class RupsDetailPane implements IDetailPane {
                 	bais = new ByteArrayInputStream(documentRawBytes);
                     PdfReader reader = new PdfReader(bais);
                     PdfDocument tempDoc = new PdfDocument(reader);
-                    rups.loadDocumentFromRawContent(documentRawBytes, DebugUtilities.getVariableName(selection), null, true);
-                    if (prevDoc != null) {
-                    	rups.compareWithDocument(prevDoc);
+                    boolean isEqual = rups.compareWithDocument(tempDoc);
+                    if (!isEqual) {
+                    	rups.loadDocumentFromRawContent(documentRawBytes, DebugUtilities.getVariableName(selection), null, true);
+                    	rups.highlightLastSavedChanges();
                     }
                     prevDoc = tempDoc;
                 }
