@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.itextpdf.pdfdebug.feature"
+      label="pdfDebug"
+      version="1.0.0.qualifier"
+      provider-name="iText Group NV">
+
+   <description>
+      This plugin implements a detail debug view panel, that allows
+you to view your PDF file’s internal content structure, content
+streams and allows you to browse the document in a logical manner.
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      Copyright (C) 2016, iText Group NV
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <plugin
+         id="com.itextpdf.pdfdebug.thirdparty.dependencies"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.itextpdf.pdfdebug.itext.dependencies"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.itextpdf.pdfdebug.plugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

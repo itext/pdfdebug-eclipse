@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: pdfDebug
+Bundle-SymbolicName: com.itextpdf.pdfdebug.plugin;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: iText Group NV
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: com.itextpdf.pdfdebug.itext.dependencies;bundle-version="1.0.0",
+ org.eclipse.debug.ui,
+ org.eclipse.jface,
+ org.eclipse.jdt.debug,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.equinox.preferences
+Bundle-ClassPath: .
+Export-Package: com.itextpdf.pdfdebug.plugin
+Bundle-Activator: com.itextpdf.pdfdebug.plugin.Activator
+Bundle-ActivationPolicy: lazy

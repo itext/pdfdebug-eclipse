@@ -4,9 +4,9 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.itextpdf</groupId>
-	<artifactId>samwell</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>pdfdebug</artifactId>
 	<packaging>pom</packaging>
+	<version>1.0.0-SNAPSHOT</version>
 
 	<properties>
 		<tycho.version>0.24.0</tycho.version>
@@ -16,11 +16,11 @@
 	</properties>
 
 	<modules>
-		<module>com.itextpdf.samwell.thirdparty.dependencies</module>
-		<module>com.itextpdf.samwell.itext.dependencies</module>
-    		<module>com.itextpdf.samwell.plugin</module>
-    		<module>com.itextpdf.samwell.feature</module>
-		<module>com.itextpdf.samwell.site</module>
+		<module>com.itextpdf.pdfdebug.thirdparty.dependencies</module>
+		<module>com.itextpdf.pdfdebug.itext.dependencies</module>
+    		<module>com.itextpdf.pdfdebug.plugin</module>
+    		<module>com.itextpdf.pdfdebug.feature</module>
+		<module>com.itextpdf.pdfdebug.site</module>
     		
 	</modules>
 
@@ -79,6 +79,5 @@
 
 		</plugins>
 	</build>
-
 </project>
 
