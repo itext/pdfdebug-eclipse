@@ -27,7 +27,7 @@ public class PdfDocumentUtilities {
     public static final String METHOD_NAME = "getSerializedBytes";
     
     private static final String ERROR_MESSAGE = "Cannot get PdfDocument. "
-    		+ "\nMake sure you create reader from stream and writer is set to DebugMode."; 
+    		+ "\nMake sure you create reader from stream or string and writer is set to DebugMode."; 
 
     private static final String DEBUG_BYTES_METHOD_NAME = "getDebugBytes";
     private static Method getDebugBytesMethod;
