@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: lib/io-7.0.0-SNAPSHOT.jar,
  lib/itext-rups-7.0.0-SNAPSHOT.jar,
  lib/kernel-7.0.0-SNAPSHOT.jar,
- lib/licensekey-2.0.0-SNAPSHOT.jar
+ lib/itext-licensekey-2.0.0-SNAPSHOT.jar
 Export-Package: com.itextpdf.io,
  com.itextpdf.io.codec,
  com.itextpdf.io.color,
