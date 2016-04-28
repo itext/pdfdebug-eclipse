@@ -24,6 +24,7 @@ public class LicenseChecker {
 	
 	private static final String LICENSE_KEY = "license";
 	private static final String PRODUCT_NAME = "pdfDebug";
+	private static final String PRODUCT_TYPE = "standalone";
     private static final int PRODUCT_MAJOR = 1;
     private static final int PRODUCT_MINOR = 0;
 	
@@ -51,7 +52,7 @@ public class LicenseChecker {
 	
 	public static boolean checkLicense() {
 		try {
-			LicenseKey.scheduledCheck(new LicenseKeyProduct(PRODUCT_NAME, PRODUCT_MAJOR, PRODUCT_MINOR, new LicenseKeyProductFeature[] {}));
+			LicenseKey.scheduledCheck(new LicenseKeyProduct(PRODUCT_NAME, PRODUCT_MAJOR, PRODUCT_MINOR, PRODUCT_TYPE, new LicenseKeyProductFeature[] {}));
 			return true;
 		} catch (LicenseKeyException e) {
 			LicenseCheckErrorDialog dlg = new LicenseCheckErrorDialog(e.getMessage());
