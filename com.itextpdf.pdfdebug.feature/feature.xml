@@ -11,12 +11,12 @@ you to view your PDF file’s internal content structure, content
 streams and allows you to browse the document in a logical manner.
    </description>
 
-   <copyright url="http://www.example.com/copyright">
+   <copyright>
       Copyright (C) 2016, iText Group NV
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://www.itextpdf.com/legal/">
+      Please confirm that you have accepted and agreed to iText&apos;s Software License Agreement terms. Copies of those terms may be downloaded from http://www.itextpdf.com/legal/
    </license>
 
    <plugin
