@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: pdfDebug iText dependencies
 Bundle-SymbolicName: com.itextpdf.pdfdebug.itext.dependencies;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-ClassPath: lib/io-7.0.0-SNAPSHOT.jar,
- lib/itext-rups-7.0.0-SNAPSHOT.jar,
- lib/kernel-7.0.0-SNAPSHOT.jar,
- lib/itext-licensekey-2.0.0-SNAPSHOT.jar
+Bundle-ClassPath: lib/io-7.0.1-SNAPSHOT.jar,
+ lib/itext-rups-7.0.1-SNAPSHOT.jar,
+ lib/kernel-7.0.1-SNAPSHOT.jar,
+ lib/itext-licensekey-2.0.1-SNAPSHOT.jar
 Export-Package: com.itextpdf.io,
  com.itextpdf.io.codec,
  com.itextpdf.io.color,
