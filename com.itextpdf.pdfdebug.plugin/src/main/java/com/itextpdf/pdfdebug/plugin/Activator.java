@@ -25,8 +25,6 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		pluginId = getBundle().getSymbolicName();
-		//LicenseChecker.clearLicense();
-		LicenseChecker.initLicense();
 	}
 
 	/*
