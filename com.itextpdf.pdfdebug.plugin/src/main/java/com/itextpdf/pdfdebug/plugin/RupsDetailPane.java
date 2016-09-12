@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.itextpdf.rups.Rups;
+import com.itextpdf.rups.model.LoggerHelper;
 import com.itextpdf.rups.model.SwingHelper;
 import com.itextpdf.kernel.PdfException;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -96,17 +97,9 @@ public class RupsDetailPane implements IDetailPane {
                 comp.setVisible(false);    
             }
         } catch (final IOException | PdfException | com.itextpdf.io.IOException e) {
-        	SwingUtilities.invokeLater(new Runnable() {
-        		public void run() {
-        			e.printStackTrace();
-        		}
-        	});
+        	LoggerHelper.error("Error while reading pdf file.", e, getClass());
         } catch (final Exception e) {
-        	SwingUtilities.invokeLater(new Runnable() {
-        		public void run() {
-        			e.printStackTrace();
-        		}
-        	});
+        	LoggerHelper.error("Unexpected error.", e, getClass());
         } finally {
             try {
                 if (bais != null) {
@@ -151,7 +144,7 @@ public class RupsDetailPane implements IDetailPane {
         		prevDoc = null;
         	}
     	} catch (Exception any) {
-    		any.printStackTrace();
+    		LoggerHelper.error("Closing error.", any, getClass());
     	}
     }
 

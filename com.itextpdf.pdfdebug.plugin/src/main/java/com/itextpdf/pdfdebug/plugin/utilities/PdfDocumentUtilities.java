@@ -19,6 +19,7 @@ import org.eclipse.jdt.debug.core.IJavaVariable;
 
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.rups.model.LoggerHelper;
 
 public class PdfDocumentUtilities {
 	
@@ -57,7 +58,7 @@ public class PdfDocumentUtilities {
         if (doc == null) {
         	SwingUtilities.invokeLater(new Runnable() {
         		public void run() {
-        			System.err.println(ERROR_MESSAGE);
+        			LoggerHelper.warn(ERROR_MESSAGE, getClass());
         		}
         	});
         	return null;
@@ -75,7 +76,7 @@ public class PdfDocumentUtilities {
         try {
 			writer.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LoggerHelper.error("Writer cloasing error", e, PdfDocumentUtilities.class);
 		}
         return documentCopyBytes;
     }
@@ -138,8 +139,7 @@ public class PdfDocumentUtilities {
 		} finally {
             try {
                 bais.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignored) {
             }
         }
         return doc;
