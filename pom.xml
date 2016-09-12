@@ -16,12 +16,10 @@
 	</properties>
 
 	<modules>
-		<module>com.itextpdf.pdfdebug.thirdparty.dependencies</module>
-		<module>com.itextpdf.pdfdebug.itext.dependencies</module>
-    		<module>com.itextpdf.pdfdebug.plugin</module>
-    		<module>com.itextpdf.pdfdebug.feature</module>
+		<module>com.itextpdf.pdfdebug.plugin</module>
+        <module>com.itextpdf.pdfdebug.feature</module>
 		<module>com.itextpdf.pdfdebug.site</module>
-    		
+			
 	</modules>
 
 	<repositories>

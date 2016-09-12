@@ -90,6 +90,7 @@ public class RupsDetailPane implements IDetailPane {
                     }
                     prevDoc = tempDoc;
                 }
+                
             } else {
             	closeRoutine();
                 comp.setVisible(false);    

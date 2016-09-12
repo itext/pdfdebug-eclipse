@@ -20,20 +20,6 @@ streams and allows you to browse the document in a logical manner.
    </license>
 
    <plugin
-         id="com.itextpdf.pdfdebug.thirdparty.dependencies"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.itextpdf.pdfdebug.itext.dependencies"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.itextpdf.pdfdebug.plugin"
          download-size="0"
          install-size="0"
