@@ -25,6 +25,7 @@
                 <version>2.10</version>
                 <configuration>
                     <excludeGroupIds>p2.eclipse-plugin</excludeGroupIds>
+                    <excludeArtifactIds>com.itextpdf.pdfdebug.plugin</excludeArtifactIds>
                     <outputDirectory>${basedir}/lib</outputDirectory>
                     <overWriteReleases>false</overWriteReleases>
                     <overWriteSnapshots>false</overWriteSnapshots>
