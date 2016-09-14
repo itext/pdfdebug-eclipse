@@ -6,8 +6,6 @@ import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import javax.swing.SwingUtilities;
-
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.jdt.debug.core.IJavaArray;
@@ -27,8 +25,10 @@ public class PdfDocumentUtilities {
 	public static final String METHOD_SIGNATURE = "()[B";
     public static final String METHOD_NAME = "getSerializedBytes";
     
-    private static final String ERROR_MESSAGE = "Cannot get PdfDocument. "
-    		+ "\nMake sure you create reader from stream or string and writer is set to DebugMode."; 
+    private static final String NOT_READY_FOR_PLUGIN_MESSAGE = "Cannot get PdfDocument. "
+    		+ "\nMake sure you create reader from stream or string and writer is set to DebugMode.";
+    
+    private static final String DOCUMENT_IS_CLOASED_MESSAGE = "The document was closed.";
 
     private static final String DEBUG_BYTES_METHOD_NAME = "getDebugBytes";
     private static Method getDebugBytesMethod;
@@ -56,11 +56,11 @@ public class PdfDocumentUtilities {
 		PdfDocument doc = null;
 		doc = getPdfDocument(var);
         if (doc == null) {
-        	SwingUtilities.invokeLater(new Runnable() {
-        		public void run() {
-        			LoggerHelper.warn(ERROR_MESSAGE, getClass());
-        		}
-        	});
+        	LoggerHelper.warn(NOT_READY_FOR_PLUGIN_MESSAGE, PdfDocumentUtilities.class);
+        	return null;
+        }
+        if (doc.isClosed()) {
+        	LoggerHelper.warn(DOCUMENT_IS_CLOASED_MESSAGE, PdfDocumentUtilities.class);
         	return null;
         }
         PdfWriter writer = doc.getWriter();
