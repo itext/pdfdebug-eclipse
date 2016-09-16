@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.itextpdf.pdfdebug.feature_1.0.1.qualifier.jar" id="com.itextpdf.pdfdebug.feature" version="1.0.1.qualifier">
+   <feature url="features/com.itextpdf.pdfdebug.feature_1.0.1.jar" id="com.itextpdf.pdfdebug.feature" version="1.0.1">
       <category name="com.itexipdf.category.id"/>
    </feature>
    <category-def name="com.itexipdf.category.id" label="iText tools">
