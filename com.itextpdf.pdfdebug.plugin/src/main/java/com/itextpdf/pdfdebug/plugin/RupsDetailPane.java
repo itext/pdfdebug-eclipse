@@ -4,23 +4,25 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.io.ByteArrayInputStream;
-
 import java.io.IOException;
 
+import javax.swing.JApplet;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import org.eclipse.debug.ui.IDetailPane;
 import org.eclipse.jdt.debug.core.IJavaVariable;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.itextpdf.rups.Rups;
+import com.itextpdf.rups.model.LoggerHelper;
 import com.itextpdf.rups.model.SwingHelper;
 import com.itextpdf.kernel.PdfException;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -30,8 +32,13 @@ import com.itextpdf.pdfdebug.plugin.utilities.PdfDocumentUtilities;
 
 public class RupsDetailPane implements IDetailPane {
 
-    private volatile Composite comp;
-    private Rups rups;
+	private volatile Composite mainComp;
+    private volatile StackLayout layout;
+	
+	private volatile Composite rupsView;
+    private volatile Text defaultView;
+    
+    private volatile Rups rups;
     private volatile JPanel panel;
     private volatile Frame frame;
 
@@ -44,20 +51,27 @@ public class RupsDetailPane implements IDetailPane {
 
     @Override
     public Control createControl(Composite parent) {
-    	comp = new Composite(parent, SWT.EMBEDDED | SWT.NO_BACKGROUND);
-    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        comp.setLayoutData(gd);
-        frame = SWT_AWT.new_Frame(comp);
-        frame = SWT_AWT.getFrame(comp);
+    	layout = new StackLayout();
+    	mainComp = new Composite(parent, SWT.NONE);
+    	mainComp.setLayout(layout);
+    	mainComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        rupsView = new Composite(mainComp, SWT.EMBEDDED);
+        rupsView.setLayoutData(new GridData(GridData.FILL_BOTH));
+        frame = SWT_AWT.new_Frame(rupsView);
+        final Dimension dim = new Dimension(parent.getSize().x, parent.getSize().y);
+        defaultView = new Text(mainComp, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL );
+        defaultView.setLayoutData(new GridData(GridData.FILL_BOTH));
+        layout.topControl = defaultView;
         SwingHelper.invokeSync(new Runnable() {
 			public void run() {
+				final JApplet applet = new JApplet();
+		        frame.add(applet);
 				panel = new JPanel(new BorderLayout());
-		        frame.add(panel, BorderLayout.CENTER);			        
+		        applet.add(panel, BorderLayout.CENTER);
+		        rups = Rups.startNewPlugin(panel, dim, frame);
 			}
 		});
-        Dimension dim = new Dimension(parent.getSize().x, parent.getSize().y);
-        rups = Rups.startNewPlugin(panel, dim, SWT_AWT.getFrame(comp));
-        return comp;
+        return mainComp;
     }
 
     @Override
@@ -68,44 +82,49 @@ public class RupsDetailPane implements IDetailPane {
 				frame.dispose();
 			}
 		});
-    	comp.dispose();
+    	rupsView.dispose();
+    	defaultView.dispose();
+    	mainComp.dispose();
     }
 
     @Override
     public void display(IStructuredSelection selection) {
+    	layout.topControl = defaultView;
+    	defaultView.setText("");
     	ByteArrayInputStream bais = null;
     	IJavaVariable var = DebugUtilities.getIJavaVariable(selection);
         try {
+        	if (var != null) {
+        		defaultView.setText(var.getValue().toString());
+        	}
         	if (PdfDocumentUtilities.isPdfDocument(var)) {
-            	comp.setVisible(true);
-                byte[] documentRawBytes = PdfDocumentUtilities.getDocumentDebugBytes(var);
+            	byte[] documentRawBytes = PdfDocumentUtilities.getDocumentDebugBytes(var);
                 if (documentRawBytes != null) {
                 	bais = new ByteArrayInputStream(documentRawBytes);
                     PdfReader reader = new PdfReader(bais);
                     PdfDocument tempDoc = new PdfDocument(reader);
-                    boolean isEqual = rups.compareWithDocument(tempDoc);
+                    boolean isEqual = false;
+                    if (prevDoc != null) {
+                    	isEqual = rups.compareWithDocument(tempDoc, true);
+                    }
                     if (!isEqual) {
                     	rups.loadDocumentFromRawContent(documentRawBytes, DebugUtilities.getVariableName(selection), null, true);
+                    }
+                    if (prevDoc != null) {
                     	rups.highlightLastSavedChanges();
                     }
                     prevDoc = tempDoc;
+                } else {
+                	rups.clearHighlights();
                 }
+                layout.topControl = rupsView;
             } else {
             	closeRoutine();
-                comp.setVisible(false);    
             }
         } catch (final IOException | PdfException | com.itextpdf.io.IOException e) {
-        	SwingUtilities.invokeLater(new Runnable() {
-        		public void run() {
-        			e.printStackTrace();
-        		}
-        	});
+        	LoggerHelper.error("Error while reading pdf file.", e, getClass());
         } catch (final Exception e) {
-        	SwingUtilities.invokeLater(new Runnable() {
-        		public void run() {
-        			e.printStackTrace();
-        		}
-        	});
+        	LoggerHelper.error("Unexpected error.", e, getClass());
         } finally {
             try {
                 if (bais != null) {
@@ -114,6 +133,7 @@ public class RupsDetailPane implements IDetailPane {
             } catch (IOException ignored) {
             }
         }
+        mainComp.layout();
     }
 
     @Override
@@ -150,7 +170,7 @@ public class RupsDetailPane implements IDetailPane {
         		prevDoc = null;
         	}
     	} catch (Exception any) {
-    		any.printStackTrace();
+    		LoggerHelper.error("Closing error.", any, getClass());
     	}
     }
 

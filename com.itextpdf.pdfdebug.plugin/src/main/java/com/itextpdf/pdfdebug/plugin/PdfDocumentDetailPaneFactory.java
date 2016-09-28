@@ -51,7 +51,7 @@ public class PdfDocumentDetailPaneFactory implements IDetailPaneFactory {
 
     @Override
     public Set<String> getDetailPaneTypes(IStructuredSelection selection) {
-    	if (PdfDocumentUtilities.isPdfDocument(DebugUtilities.getIJavaVariable(selection)) && LicenseChecker.checkLicense()) {
+    	if (PdfDocumentUtilities.isPdfDocument(DebugUtilities.getIJavaVariable(selection))) {
             return ids;
         }
         return Collections.emptySet();
