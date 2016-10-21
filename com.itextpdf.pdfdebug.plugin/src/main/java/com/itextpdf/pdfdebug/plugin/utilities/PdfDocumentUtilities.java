@@ -56,7 +56,7 @@ public class PdfDocumentUtilities {
 		PdfDocument doc = null;
 		doc = getPdfDocument(var);
         if (doc == null) {
-        	LoggerHelper.warn(NOT_READY_FOR_PLUGIN_MESSAGE, PdfDocumentUtilities.class);
+        	LoggerHelper.error(NOT_READY_FOR_PLUGIN_MESSAGE, PdfDocumentUtilities.class);
         	return null;
         }
         if (doc.isClosed()) {
