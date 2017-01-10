@@ -1,1 +1,4 @@
-Closed source iText 7 code
+pdfDebug
+========
+
+iText 7 Java pdfDebug for Eclipse (samwell)
