@@ -10,5 +10,4 @@
 
   <artifactId>com.itextpdf.pdfdebug.feature</artifactId>
   <packaging>eclipse-feature</packaging>
-
 </project>
