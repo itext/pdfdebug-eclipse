@@ -13,7 +13,7 @@
 
   <properties>
     <bouncycastle.version>1.49</bouncycastle.version>
-    <rups.version>7.1.2-SNAPSHOT</rups.version>
+    <rups.version>7.1.3-SNAPSHOT</rups.version>
   </properties>
 
   <repositories>
