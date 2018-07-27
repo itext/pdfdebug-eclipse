@@ -62,7 +62,7 @@ public class RupsDetailPane implements IDetailPane {
         defaultView = new Text(mainComp, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL );
         defaultView.setLayoutData(new GridData(GridData.FILL_BOTH));
         layout.topControl = defaultView;
-        SwingHelper.invokeSync(new Runnable() {
+        SwingHelper.invoke(new Runnable() {
 			public void run() {
 				final JApplet applet = new JApplet();
 		        frame.add(applet);
@@ -77,7 +77,7 @@ public class RupsDetailPane implements IDetailPane {
     @Override
     public void dispose() {
     	closeRoutine();
-    	SwingHelper.invokeSync(new Runnable() {
+    	SwingHelper.invoke(new Runnable() {
 			public void run() {
 				frame.dispose();
 			}
@@ -98,6 +98,7 @@ public class RupsDetailPane implements IDetailPane {
         		defaultView.setText(var.getValue().toString());
         	}
         	if (PdfDocumentUtilities.isPdfDocument(var)) {
+                layout.topControl = rupsView;
             	byte[] documentRawBytes = PdfDocumentUtilities.getDocumentDebugBytes(var);
                 if (documentRawBytes != null) {
                 	bais = new ByteArrayInputStream(documentRawBytes);
@@ -117,7 +118,6 @@ public class RupsDetailPane implements IDetailPane {
                 } else {
                 	rups.clearHighlights();
                 }
-                layout.topControl = rupsView;
             } else {
             	closeRoutine();
             }
