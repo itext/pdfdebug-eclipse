@@ -2,7 +2,7 @@
 <feature
       id="com.itextpdf.pdfdebug.feature"
       label="pdfDebug"
-      version="2.0.1.qualifier"
+      version="2.0.1"
       provider-name="iText Group NV">
 
    <description>
@@ -31,10 +31,10 @@ SLF4j under the MIT license:
  distribute,  sublicense, and/or sell  copies of  the Software,  and to
  permit persons to whom the Software  is furnished to do so, subject to
  the following conditions:
- 
+
  The  above  copyright  notice  and  this permission  notice  shall  be
  included in all copies or substantial portions of the Software.
- 
+
  THE  SOFTWARE IS  PROVIDED  &quot;AS  IS&quot;, WITHOUT  WARRANTY  OF ANY  KIND,
  EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
  MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
@@ -42,9 +42,9 @@ SLF4j under the MIT license:
  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- 
+
 Logback: the reliable, generic, fast and flexible logging framework.
- Copyright (C) 1999-2012, QOS.ch. All rights reserved. 
+ Copyright (C) 1999-2012, QOS.ch. All rights reserved.
 
  This program and the accompanying materials are licensed under
  the terms of the Eclipse Public License v1.0 as published by
