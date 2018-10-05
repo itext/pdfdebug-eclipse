@@ -5,9 +5,12 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JApplet;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.eclipse.debug.ui.IDetailPane;
 import org.eclipse.jdt.debug.core.IJavaVariable;
@@ -22,8 +25,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.itextpdf.rups.Rups;
+import com.itextpdf.rups.event.RupsEvent;
 import com.itextpdf.rups.model.LoggerHelper;
-import com.itextpdf.rups.model.SwingHelper;
 import com.itextpdf.kernel.PdfException;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
@@ -62,26 +65,22 @@ public class RupsDetailPane implements IDetailPane {
         defaultView = new Text(mainComp, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL );
         defaultView.setLayoutData(new GridData(GridData.FILL_BOTH));
         layout.topControl = defaultView;
-        SwingHelper.invoke(new Runnable() {
-			public void run() {
-				final JApplet applet = new JApplet();
-		        frame.add(applet);
-				panel = new JPanel(new BorderLayout());
-		        applet.add(panel, BorderLayout.CENTER);
-		        rups = Rups.startNewPlugin(panel, dim, frame);
-			}
-		});
+        final JApplet applet = new JApplet();
+        frame.add(applet);
+        panel = new JPanel(new BorderLayout());
+        applet.add(panel, BorderLayout.CENTER);
+        rups = Rups.startNewPlugin(panel, dim, frame);
         return mainComp;
     }
 
     @Override
     public void dispose() {
-    	closeRoutine();
-    	SwingHelper.invoke(new Runnable() {
-			public void run() {
-				frame.dispose();
-			}
-		});
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                closeRoutine();
+                frame.dispose();
+            }
+        });
     	rupsView.dispose();
     	defaultView.dispose();
     	mainComp.dispose();
@@ -109,6 +108,7 @@ public class RupsDetailPane implements IDetailPane {
                     	isEqual = rups.compareWithDocument(tempDoc, true);
                     }
                     if (!isEqual) {
+                    	listenOnetimeForHighlight(rups);
                     	rups.loadDocumentFromRawContent(documentRawBytes, DebugUtilities.getVariableName(selection), null, true);
                     }
                     if (prevDoc != null) {
@@ -174,7 +174,25 @@ public class RupsDetailPane implements IDetailPane {
     	}
     }
 
-    
+    private static void listenOnetimeForHighlight(final Rups rups) {
+        final Observer openObserver = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                if (!(arg instanceof RupsEvent)) return;
+                RupsEvent re = (RupsEvent) arg;
+                // only cares for OPEN_DOCUMENT_POST_EVENT
+                if(re.getType()!=RupsEvent.OPEN_DOCUMENT_POST_EVENT) return;
+                final Observer listener = this;
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        rups.highlightLastSavedChanges();
+                        rups.unregisterEventObserver(listener);
+                    }
+                });
+            }
+        };
 
-    
+        rups.registerEventObserver(openObserver);
+    }
 }
