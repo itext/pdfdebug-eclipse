@@ -2,7 +2,7 @@
 <feature
       id="com.itextpdf.pdfdebug.feature"
       label="pdfDebug"
-      version="2.0.1.qualifier"
+      version="2.0.2.qualifier"
       provider-name="iText Group NV">
 
    <description>
