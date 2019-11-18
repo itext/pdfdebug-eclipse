@@ -10,7 +10,7 @@
   <packaging>eclipse-plugin</packaging>
   <properties>
     <bouncycastle.version>1.49</bouncycastle.version>
-    <rups.version>7.1.9-SNAPSHOT</rups.version>
+    <rups.version>7.1.10-SNAPSHOT</rups.version>
   </properties>
   <repositories>
     <repository>
