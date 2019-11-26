@@ -9,7 +9,7 @@
   <artifactId>com.itextpdf.pdfdebug.plugin</artifactId>
   <packaging>eclipse-plugin</packaging>
   <properties>
-    <bouncycastle.version>1.49</bouncycastle.version>
+    <bouncycastle.version>1.64</bouncycastle.version>
     <rups.version>7.1.10-SNAPSHOT</rups.version>
   </properties>
   <repositories>
