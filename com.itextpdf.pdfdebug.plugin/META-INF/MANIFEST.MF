@@ -14,13 +14,12 @@ Require-Bundle: org.eclipse.debug.ui,
 Bundle-ClassPath: .,
  lib/bcpkix-jdk15on-1.64.jar,
  lib/bcprov-jdk15on-1.64.jar,
- lib/dom4j-1.6.1.jar,
+ lib/dom4j-2.1.1.jar,
  lib/io-7.1.10-SNAPSHOT.jar,
  lib/itext-rups-7.1.10-SNAPSHOT.jar,
  lib/kernel-7.1.10-SNAPSHOT.jar,
  lib/logback-classic-1.2.3.jar,
  lib/logback-core-1.2.3.jar,
- lib/slf4j-api-1.7.13.jar,
- lib/xml-apis-1.0.b2.jar
+ lib/slf4j-api-1.7.13.jar
 Bundle-Activator: com.itextpdf.pdfdebug.plugin.Activator
 Bundle-ActivationPolicy: lazy
